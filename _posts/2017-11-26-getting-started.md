@@ -4,7 +4,7 @@ title: Week 1 - visualizing spatial data
 featured-img: sleek
 ---
 
-## Getting started
+## Week 1 - visualizing spatial data
 
 Welcome to week 1 of spatial analysis for public health. This week we will be learning about the process of moving from visualizing spatial data through to exploration and analysis. We will get our hands dirty with some R code and learn how to make beautiful maps.
 
