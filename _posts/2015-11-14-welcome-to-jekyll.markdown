@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Welcome to Spatial Epi!"
+title:  "Week 1 - Welcome to Spatial Epi!"
 date:   2018-10-22 16:52:07
 categories: jekyll update
 tags: jekyll update
