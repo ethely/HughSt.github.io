@@ -6,10 +6,68 @@ featured-img: sleek
 
 ## Getting started
 
-Welcome to week 1 of spatial analysis for public health. This week we will be learning about the process of moving from visualizing spatial data through to exploration and analysis. We will get our hands dirty with some R code and learn how to make beautiful maps.
+[GitHub Pages](https://pages.github.com) can automatically generate and serve the website for you.
+Let's say you have a username/organisation `my-org` and project `my-proj`; if you locate Jekyll source under `docs` folder of master branch in your repo `github.com/my-org/my-proj`, the website will be served on `my-org.github.io/my-proj`.
+The good thing about coupling your documentation with the source repo is, whenever you merge features with regarding content to master branch, it will also be published in the webpage instantly.
 
-This week's [lecture]() will focus on some of the concepts behind spatial epidemiology. I will then walk you through some R code to load and visualize spatial data in [this video](). You will then have a chance to apply that code to new data and questions in this week's [assignment]().
+1. Just download the source from [github.com/janczizikow/sleek](https://github.com/janczizikow/sleek/) into your repo under `docs` folder.
+2. Edit site settings in  `_config.yml` file according to your project.
+3. Replace `favicon.ico` and `img/logonav.png` with your own logo.
 
-As ever, post any questions on the b-courses piazza and if you are still having issues, join us on 1 of the office hour sessions where we can walk you through any challenges you are having.
+## Writing content
 
-Good luck!
+### Docs
+
+Docs are [collections](https://jekyllrb.com/docs/collections/) of pages stored under `_docs` folder. To create a new page:
+
+**1.** Create a new Markdown as `_docs/my-page.md` and write [front matter](https://jekyllrb.com/docs/frontmatter/) & content such as:
+
+```
+---
+title: My Page
+permalink: /docs/my-page/
+---
+
+Hello World!
+```
+
+**2.** Add the pagename to `_pages/docs.yml` file in order to list in docs navigation panel:
+
+```
+- title: My Group Title
+  docs:
+  - my-page
+```
+
+### Blog posts
+
+Add a new Markdown file such as `2017-05-09-my-post.md` and write the content similar to other post examples.
+
+### Pages
+
+The home page is located under `index.md` file. You can change the content or design completely different welcome page for your taste.
+
+In order to add a new page, create a new html or markdown file under root directory and link it in `_includes/header.html`.
+
+### Images TODO
+
+Introduce gulp optimization
+
+Breakpoint | Image Type | Width | Retina
+------------ | ------------ | ------------- | -------------
+xs |Post Thumb | 535px | 1070px
+sm |Post Thumb | 500px| 1000px
+md |Post Thumb | 329.375px | 658.75px
+lg |Post Thumb | 445.625px | 891.25px
+xl |Post Thumb | 353.125px | 706.25px
+
+
+Breakpoint | Image Type | Width | Retina
+------------ | ------------ | ------------- | -------------
+xs |Post Hero | 535px | 1070px
+sm |Post Hero | 500px| 1000px
+md |Post Hero | 329.375px | 658.75px
+lg |Post Hero | 445.625px | 891.25px
+xl |Post Hero | 353.125px | 706.25px
+
+Happy hacking!
