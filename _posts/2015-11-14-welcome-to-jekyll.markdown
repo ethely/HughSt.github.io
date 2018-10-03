@@ -4,7 +4,7 @@ title:  "Welcome to Spatial Epi!"
 date:   2018-10-22 16:52:07
 categories: jekyll update
 tags: jekyll update
-image: /images/pic02.jpg
+image: /images/unemployment.jpg
 ---
 This week we will cover the main concepts of Spatial Epidemiology and will get our hands dirty with some R code to get you up and running loading and visualizing spatial data.
 
