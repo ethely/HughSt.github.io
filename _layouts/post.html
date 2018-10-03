@@ -1,88 +1,91 @@
 <!DOCTYPE HTML>
 <!--
-	Future Imperfect by HTML5 UP
-	html5up.net | @n33co
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+  Jekyll integration by somiibo.com
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-  {% include header.html %}
-	<body>
+	<head>
+    {% include head.html %}
+	</head>
+	<body class="is-loading">
 
 		<!-- Wrapper -->
-			<div id="wrapper">
+			<div id="wrapper" class="fade-in">
 
-				{% include head.html %}
+				<!-- Header -->
+        <header id="header">
+          <a href="{{ "/" | absolute_url }}" class="logo">{{site.title}}</a>
+        </header>
+
+				<!-- Nav -->
+					<nav id="nav">
+
+            {% include nav.html %}
+
+						<ul class="icons">
+              <li><a href="https://twitter.com/{{site.twitter}}" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a></li>
+              <li><a href="https://facebook.com/{{site.facebook}}" class="icon fa-facebook" rel="nofollow"><span class="label">Facebook</span></a></li>
+              <li><a href="https://instagram.com/{{site.instagram}}" class="icon fa-instagram" rel="nofollow"><span class="label">Instagram</span></a></li>
+              <li><a href="https://github.com/{{site.github}}" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
 				<!-- Main -->
-					<div id="main">
+				<div id="main">
+          <section class="post">
+    				<header class="major">
+      				<span class="date">{{page.date | date_to_string}}</span>
+      				<h1>{{page.title}}</h1>
+      				<p>{{page.excerpt}}</p>
+      			</header>
+      			<div class="image main"><img src="{{page.image}}" alt=""></div>
+      			<p>{{content}}</p>
+      		</section>
 
-						<!-- Post -->
-            <article class="post">
-              <header>
-                <div class="title">
-                  <h2><a href="{{ page.url }}">{{ page.title }}</a></h2>
-                <!-- <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p> -->
-                </div>
-                <div class="meta">
-                  <time class="published" datetime="{{ page.date | date: "%F" }}">{{ page.date | date: "%B %d, %Y" }}</time>
-                  {% for category in page.categories limit:1 %}
-                    <a href="#">{{ category }}</a>
-                  {% endfor %}
+          <div class="comments-wrapper">
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+               *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+               *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+               */
 
-        <!--
-        <a href="#" class="author"><span class="name">Jane Doe</span><img src="images/avatar.jpg" alt="" /></a>
-        -->
-                </div>
-              </header>
-              {% if page.image %}
-                <a href="{{ page.url }}" class="image featured"><img src="{{page.image}}" alt="" /></a>
-              {% endif %}
-              {{ content }}
-              <footer>
-                <ul class="stats">
-                {% for tag in page.tags limit:3 %}
-                  <li><a href="#">{{ tag }}</a></li>
-                {% endfor %}
-        <!--
-        <li><a href="#">General</a></li>
-        <li><a href="#" class="icon fa-heart">28</a></li>
-        <li><a href="#" class="icon fa-comment">128</a></li>
-        -->
-                </ul>
-              </footer>
-           </article>
-  					<ul class="actions pagination">
-  					  {% if page.previous %}
-  	  				  <li><a href="{{ page.previous.url }}" class="button big previous">Previous Post</a></li>
-  						{% else %}
-  						  <li><a href="#" class="disabled button big previous">Previous Post</a></li>
-  						{% endif %}
-							{% if page.next %}
-  						  <li><a href="{{ page.next.url }}" class="button big next">Next Post</a></li>
-  						{% else %}
-  						  <li><a href="#" class="disabled button big next">Next Post</a></li>
-  						{% endif %}
-  					</ul>
+              var disqus_config = function () {
+                  this.page.url = '{{ absolute_url }}{{ page.url }}';  /*Replace PAGE_URL with your page's canonical URL variable*/
+                  this.page.identifier = '{{ page.url }}'; /*Replace PAGE_IDENTIFIER with your page's unique identifier variable*/
+              };
+
+              (function() {  /* dont endit below this line */
+                  var d = document, s = d.createElement('script');
+
+                  s.src = 'https://{{ site.disqus_shortname }}.disqus.com/embed.js';
+
+                  s.setAttribute('data-timestamp', +new Date());
+                  (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+        </div><!-- /.comments-wrapper -->
+
+
+					<!-- Footer -->
+						<footer>
+              <ul class="actions">
+                <li><a href="{{ "/blog/" | absolute_url }}" class="button">Our Blog</a></li>
+              </ul>
+						</footer>
 					</div>
 
-				<!-- Sidebar -->
-					<section id="sidebar">
+				<!-- Footer -->
+        {% include foot.html %}
 
-						<!-- Intro -->
-						{% include intro.html %}
-
-						<!-- Mini Posts -->
-						{% include miniposts.html %}
-
-						<!-- Posts List -->
-
-						<!-- About -->
-					  {% include about.html %}
-
-						<!-- Footer -->
-						{% include footer.html %}
-					</section>
 			</div>
-		<!-- Scripts -->
-		{% include scripts.html %}
+
+      <!-- Scripts -->
+  		{% include scripts-main.html %}
+			{% include tracking.html %}
+
 	</body>
 </html>
