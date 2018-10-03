@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Getting Started with Sleek
+title: Week 1 - visualizing spatial data
 featured-img: sleek
 ---
 
