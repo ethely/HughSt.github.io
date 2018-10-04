@@ -10,7 +10,7 @@ Hugh Sturrock is an Assistant Professor of Epidemiology and Biostatistics at UCS
 ![alt text](https://www.dropbox.com/s/3ra4lwmnxdmjhux/IMG_9905_small.png?dl=1 "Logo Title Text 1")
 
 Ricardo Andrade-Pacheco is a Specialist at UCSF and is a spatial statistician working on developing an applying different statistical approaches to solve important public health problems.
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![alt text](https://www.dropbox.com/s/fzlhusqr9krvvmo/ricardo.jpg?dl=1 "Logo Title Text 1")
 
 Alemayehu Midekisa is a Specialist at UCSF with particular expertise in remote sensing and GIS. He supports a number of projects and has particular interest in large scale problems solveable using Google Earth Engine.
 
