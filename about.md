@@ -4,10 +4,13 @@ title: About
 permalink: /about/
 ---
 
-Sleek is a modern Jekyll theme focused on speed performance & SEO best practices. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/) or simply read the guide on how to [get started](/getting-started)
+## The Team
 
-You can find the source code for the Jekyll new theme at:
-[sleek](https://github.com/janczizikow/sleek)
+Hugh Sturrock is an Assistant Professor of Epidemiology and Biostatistics at UCSF and is a spatial epidemiologist who's work focuses on tropical diseases.
+![alt text](https://github.com/HughSt/HughSt.github.io/blob/master/assets/img/about/IMG_9905_small.jpg "Logo Title Text 1")
 
-You can find the source code for Jekyll at
-[jekyll](https://github.com/jekyll/jekyll)
+Ricardo Andrade-Pacheco is a Specialist at UCSF and is a spatial statistician working on developing an applying different statistical approaches to solve important public health problems.
+
+Alemayehu Midekisa is a Specialist at UCSF with particular expertise in remote sensing and GIS. He supports a number of projects and has particular interest in large scale problems solveable using Google Earth Engine.
+
+Everleigh Stokes is an MPH student at UCB in Environmental Health Sciences. Everleigh is the Graduate Student Instructor for this course and will be your first point of contact if you have any issues.
