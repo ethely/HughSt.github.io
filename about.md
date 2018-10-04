@@ -18,5 +18,6 @@ Ricardo Andrade-Pacheco is a Specialist at UCSF and is a spatial statistician wo
 
 Alemayehu Midekisa is a Specialist at UCSF with particular expertise in remote sensing and GIS. He supports a number of projects and has particular interest in large scale problems solveable using Google Earth Engine.
 
+![alt text](https://www.dropbox.com/s/dgicwzknbcumbil/everleigh.jpg?dl=1 "Everleigh Stokes")
 
 Everleigh Stokes is an MPH student at UCB in Environmental Health Sciences. Everleigh is the Graduate Student Instructor for this course and will be your first point of contact if you have any issues.
