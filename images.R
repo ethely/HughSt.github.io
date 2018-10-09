@@ -10,7 +10,8 @@ col_pal <- colorNumeric(wes_palette("Zissou1", 64, type = "continuous")[1:64], v
   leaflet() %>% 
     addTiles() %>% 
       addRasterImage(alt, col = col_pal) %>% 
-        addLegend(pal = col_pal, values = values(alt))
+        addLegend(pal = col_pal, values = values(alt)) %>% 
+    addScaleBar("topleft")
 
 # Raster analysis  
 LULC <- raster("https://www.dropbox.com/s/hc9m6ac3kb845ip/BF_land_use.tif?dl=1")
