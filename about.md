@@ -4,13 +4,11 @@ title: About
 permalink: /about/
 ---
 
-## The Team
+## Contributors
 
 ![alt text](https://www.dropbox.com/s/3ra4lwmnxdmjhux/IMG_9905_small.png?dl=1 "Hugh Sturrock")
 
 Hugh Sturrock is an Assistant Professor of Epidemiology and Biostatistics at UCSF and is a spatial epidemiologist who's work focuses on tropical diseases.
-
-test
 
 ![alt text](https://www.dropbox.com/s/3ys75k6z1c13ztj/ricardo.png?dl=1 "Ricardo Andrade-Pacheco")
 
