@@ -1,4 +1,4 @@
-###Assignment 1: Working with Spatial Data in R
+###Lab 1: Working with Spatial Data in R
 #Normally this type of analysis deals with three types of files:
 #Shapefiles, geojson, or tables with coordinates
 
@@ -14,7 +14,7 @@ library(rgdal)
 # The simplest data is a table with coordinates (i.e. point data)
 # For this assignment, we'll work with malaria prevalence point data from Burkina Faso
 
-# First set your working directory to the folder containing the files 
+# First set your working directory to the folder containing the data files 
 # for week 1
 setwd("your file path here")
 
@@ -37,7 +37,7 @@ names(BF_malaria_data) # gives you the column names
 BF_malaria_data$infection_prevalence <- BF_malaria_data$positives / BF_malaria_data$examined
 
 #Create a histogram of the prevalence
-hist(BF_malaria_data$infection_prevalence)
+hist(BF_malaria_data$infection_prevalence, breaks=20)
 
 # Use R's basic plotting function to plot 
 plot(BF_malaria_data$longitude, BF_malaria_data$latitude,
@@ -70,7 +70,7 @@ plot(BF_malaria_data$longitude, BF_malaria_data$latitude,
      cex=BF_malaria_data$infection_prevalence,
      ylab = "Latitude", xlab="Longitude", 
      col=color_class[prev_class],
-     pch=12)
+     pch=16)
 #Can you change the symbol to something other than circles?
 
 # With larger filled circles
@@ -84,7 +84,7 @@ plot(BF_malaria_data$longitude, BF_malaria_data$latitude,
 ##Creating a SpatialPointsDataFrame
 # Let's make a SpatialPointsDataFrame object (useful for other operations)
 BF_malaria_data_SPDF <- SpatialPointsDataFrame(coords = BF_malaria_data[,c("longitude", "latitude")],
-                                      data = BF_malaria_data[,c("examined", "positives")],
+                                      data = BF_malaria_data[,c("examined", "positives", "infection_prevalence")],
                                       proj4string = CRS("+init=epsg:4326")) # WGS 1984 using lat/long. Optional but good to specify
 
 # Summary of object
