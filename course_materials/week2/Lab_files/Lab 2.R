@@ -8,6 +8,7 @@ library(oro.nifti)
 library(rgdal)
 install.packages("geosphere")
 library(geosphere)
+library(rgeos)
 
 # First set your working directory to the folder containing the files 
 # for week 2
@@ -77,24 +78,35 @@ Npos_per_Adm1 <- tapply(BF_malaria_data_SPDF$positives, BF_Adm_1_per_point$NAME_
 #Calculate the prevalence
 prev_per_Adm1 <- Npos_per_Adm1 / Nex_per_Adm1
 
+# You can now merge these prevalence estimates
+# back into your SPDF. First convert your prev_per_Adm1 
+# vecotr into a dataframe with an ID column
+prev_per_Adm1_df <- data.frame(NAME_1 = names(prev_per_Adm1),
+                               prevalence = prev_per_Adm1,
+                               row.names=NULL)
+BF_Adm_1 <- merge(BF_Adm_1, prev_per_Adm1_df,
+                              by = "NAME_1")
+head(BF_Adm_1)
+
 #Mapping Calculated Values
 # Now we can use this to make a map of prevalence
 #Assign a color pallete to the quantiles
-colorPal <- colorQuantile(tim.colors(), prev_per_Adm1, n = 4)
+colorPal <- colorQuantile(tim.colors(), BF_Adm_1$prevalence, n = 4)
 #Plot
-plot(BF_Adm_1, col=colorPal(prev_per_Adm1))
+plot(BF_Adm_1, col=colorPal(BF_Adm_1$prevalence))
 
 #...Or
 leaflet() %>% addTiles() %>% addPolygons(data=BF_Adm_1, 
-                                         col=colorPal(prev_per_Adm1),
+                                         col=colorPal(BF_Adm_1$prevalence),
                                          fillOpacity=0.6)
-#For practice, can you insert a different basemap using leaflet?
+# For practice, can you insert a different basemap using leaflet?
+# Also, can you add a legend?
 
 #You can also define your own color bins
-colorPal <- colorBin(tim.colors(), prev_per_Adm1, bins = c(0, 0.25, 0.5, 0.75, 1))
+colorPal <- colorBin(tim.colors(), BF_Adm_1$prevalence, bins = c(0, 0.25, 0.5, 0.75, 1))
 
 #Plot
-plot(BF_Adm_1, col=colorPal(prev_per_Adm1))
+plot(BF_Adm_1, col=colorPal(BF_Adm_1$prevalence))
 #Can you change the color bin breaks?
 
 ##Importing Raster Covariates
@@ -105,28 +117,32 @@ BF_elev <- raster::getData("alt", country="BF")
 BF_elev <- raster("")
 plot(BF_elev)
 
-# Land use (# For information on land use classifications see http://due.esrin.esa.int/files/GLOBCOVER2009_Validation_Report_2.2.pdf)
+# Land use (# For information on land use classifications 
+# see http://due.esrin.esa.int/files/GLOBCOVER2009_Validation_Report_2.2.pdf)
 BF_land_use <- raster("BF_land_use.tif")
 BF_land_use
 
 #Plot the land use raster
 plot(BF_land_use)
-str(BF_land_use)
-# For a break down of the classes in BF aka how often each land use type occurs in BF
+
+# For a break down of the classes in BF aka how 
+# often each land use type occurs in BF
 table(BF_land_use[]) 
 
 
-##Resampling Raster Files
-# Its good practice to resample rasters to the same extent and resolution (i.e. same grid)
+##Resampling Raster Files (see lecture video for more)
+# Its good practice to resample rasters to the 
+# same extent and resolution (i.e. same grid)
 # This makes it easier to deal with later and to relate rasters to each other
 # The resample command makes this process easy
-# The default method is bilinear interpolation, which doesn't make sense for our categorical
+# The default method is bilinear interpolation, 
+# which doesn't make sense for our categorical
 # variable, so we can use the nearest neighbour function 'ngb
 BF_land_use_resampled <- resample(BF_land_use, BF_elev, method="ngb") 
 
 # AH - why might they not intercect?? Hint: check the projections...
-crs(BF_land_use) # Mercator
-crs(BF_elev) # WGS84
+crs(BF_land_use) # Mercator/meters
+crs(BF_elev) # WGS84/decimal degrees
 
 # To reproject a raster, you can use the projectRaster function
 BF_land_use <- projectRaster(BF_land_use, crs=crs(BF_elev), method="ngb")
