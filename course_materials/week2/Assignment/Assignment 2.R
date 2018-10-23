@@ -1,3 +1,5 @@
+
+
 # 1. Use this file of population density to calculate a table of 
 # positives per admin 1 level
 BF_pop <- raster("BF_pop.tif") # originally from worlpop.org

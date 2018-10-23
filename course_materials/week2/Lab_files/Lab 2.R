@@ -80,7 +80,7 @@ prev_per_Adm1 <- Npos_per_Adm1 / Nex_per_Adm1
 
 # You can now merge these prevalence estimates
 # back into your SPDF. First convert your prev_per_Adm1 
-# vecotr into a dataframe with an ID column
+# vector into a dataframe with an ID column
 prev_per_Adm1_df <- data.frame(NAME_1 = names(prev_per_Adm1),
                                prevalence = prev_per_Adm1,
                                row.names=NULL)
