@@ -65,9 +65,17 @@ CaseControl_ppp <- ppp(CaseControl$long, CaseControl$lat,
                        window = Nam_Owin, 
                        marks=as.factor(CaseControl$case))
 
-
-risk_est <-  relrisk(CaseControl_ppp)
+# if the 'relative' argument is specified as 'FALSE',
+# which is default, the output is the probability of
+# being a case
+risk_est <-  relrisk(CaseControl_ppp, sigma = 0.1)
 plot(risk_est)
+
+# If you specify relative = TRUE, the output
+# is the relative risk (probability of being a case,
+# relative to probability of being a control)
+rel_risk_est <-  relrisk(CaseControl_ppp, relative = TRUE, sigma = 0.1)
+plot(rel_risk_est)
 
 # to plot on a web map, first specify the projection
 risk_raster <- raster(risk_est, crs = crs(NAM_Adm0))

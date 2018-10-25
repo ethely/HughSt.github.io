@@ -168,7 +168,7 @@ colorPal <- colorQuantile(tim.colors(), BF_malaria_data_SPDF$infection_prevalenc
 
 # colorPal is now a function you can apply to get the corresponding
 # color for a value
-colorPal(0.1)
+colorPal(0.6)
 
 basemap %>% addPolygons(data=BF_Adm_1, weight = 2, fillOpacity=0,
                         popup = BF_Adm_1$NAME_1) %>%

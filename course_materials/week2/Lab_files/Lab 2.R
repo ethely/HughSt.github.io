@@ -1,12 +1,15 @@
-###Assignment 2: Manipulating Spatial Data
+###Lab 2: Manipulating Spatial Data
 
 #Please ensure the following packages are loaded
+# Remember, if you don't already have a package
+# install it first. i.e. for geosphere package
+install.packages("geosphere")
+
 library(sp)
 library(raster)
 library(leaflet)
 library(oro.nifti)
 library(rgdal)
-install.packages("geosphere")
 library(geosphere)
 library(rgeos)
 
@@ -78,14 +81,16 @@ Npos_per_Adm1 <- tapply(BF_malaria_data_SPDF$positives, BF_Adm_1_per_point$NAME_
 #Calculate the prevalence
 prev_per_Adm1 <- Npos_per_Adm1 / Nex_per_Adm1
 
-# You can now merge these prevalence estimates
-# back into your SPDF. First convert your prev_per_Adm1 
-# vector into a dataframe with an ID column
+#You can now merge these prevalence estimates
+#back into your SPDF. First convert your prev_per_Adm1
+#vector into a dataframe with an ID column
 prev_per_Adm1_df <- data.frame(NAME_1 = names(prev_per_Adm1),
                                prevalence = prev_per_Adm1,
                                row.names=NULL)
+
 BF_Adm_1 <- merge(BF_Adm_1, prev_per_Adm1_df,
-                              by = "NAME_1")
+                  by = "NAME_1")
+
 head(BF_Adm_1)
 
 #Mapping Calculated Values
@@ -99,8 +104,7 @@ plot(BF_Adm_1, col=colorPal(BF_Adm_1$prevalence))
 leaflet() %>% addTiles() %>% addPolygons(data=BF_Adm_1, 
                                          col=colorPal(BF_Adm_1$prevalence),
                                          fillOpacity=0.6)
-# For practice, can you insert a different basemap using leaflet?
-# Also, can you add a legend?
+#For practice, can you insert a different basemap using leaflet? Also, can you add a legend?
 
 #You can also define your own color bins
 colorPal <- colorBin(tim.colors(), BF_Adm_1$prevalence, bins = c(0, 0.25, 0.5, 0.75, 1))
@@ -114,38 +118,34 @@ plot(BF_Adm_1, col=colorPal(BF_Adm_1$prevalence))
 
 # Elevation
 BF_elev <- raster::getData("alt", country="BF")
-BF_elev <- raster("")
 plot(BF_elev)
 
-# Land use (# For information on land use classifications 
-# see http://due.esrin.esa.int/files/GLOBCOVER2009_Validation_Report_2.2.pdf)
+# Land use (# For information on land use classifications see http://due.esrin.esa.int/files/GLOBCOVER2009_Validation_Report_2.2.pdf)
 BF_land_use <- raster("BF_land_use.tif")
 BF_land_use
 
 #Plot the land use raster
 plot(BF_land_use)
 
-# For a break down of the classes in BF aka how 
-# often each land use type occurs in BF
+# For a break down of the classes in BF aka how often each land use type occurs in BF
+#(Note: this is just the number of pixels per land use type - NOT acres)
 table(BF_land_use[]) 
 
 
-##Resampling Raster Files (see lecture video for more)
-# Its good practice to resample rasters to the 
-# same extent and resolution (i.e. same grid)
+##Resampling Raster Files
+# Its good practice to resample rasters to the same extent and resolution (i.e. same grid)
 # This makes it easier to deal with later and to relate rasters to each other
 # The resample command makes this process easy
-# The default method is bilinear interpolation, 
-# which doesn't make sense for our categorical
+# The default method is bilinear interpolation, which doesn't make sense for our categorical
 # variable, so we can use the nearest neighbour function 'ngb
 BF_land_use_resampled <- resample(BF_land_use, BF_elev, method="ngb") 
 
 # AH - why might they not intercect?? Hint: check the projections...
-crs(BF_land_use) # Mercator/meters
-crs(BF_elev) # WGS84/decimal degrees
+crs(BF_land_use) # Mercator
+crs(BF_elev) # WGS84
 
 # To reproject a raster, you can use the projectRaster function
-BF_land_use <- projectRaster(BF_land_use, crs=crs(BF_elev), method="ngb")
+BF_land_use <- projectRaster(BF_land_use, BF_elev, method="ngb")
 
 # Now try resampling
 BF_land_use_resampled <- resample(BF_land_use, BF_elev, method="ngb") 
