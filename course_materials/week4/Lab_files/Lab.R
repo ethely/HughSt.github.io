@@ -90,9 +90,12 @@ plot(pgi.cor)
 load("Scotland.RData")
 
 # Remind ourselves what this looks like
-scot_col_pal <- colorQuantile(topo.colors(4), scotland$SMR)
+scot_col_pal <- colorBin(topo.colors(4), scotland$SMR, bins = c(0, 50, 100, 200, 700))
 leaflet() %>% addProviderTiles("Stamen.Toner") %>% 
-  addPolygons(data=scotland, col=scot_col_pal(scotland$SMR), weight=2, fillOpacity = 0.6)
+  addPolygons(data=scotland, col=scot_col_pal(scotland$SMR), weight=2, fillOpacity = 0.6) %>% 
+  addLegend(labels = c("<50", "50-100", "100-200", ">200"), 
+            pal = scot_col_pal, values=scotland$SMR, title = "SMR",
+            "topleft")
 
 ngh <- poly2nb(scotland, row.names=scotland$SP_ID)
 ngh[]
@@ -110,7 +113,7 @@ moran.test(scotland$SMR, listw=ngh_weights)
 
 
 ###########################################################################################################
-#  Part II:  Local measures of clustering for point data
+#  Part II:  Local measures of clustering 
 
 ###########################################################################################################
 
@@ -181,6 +184,45 @@ leaflet(BF_malaria_data) %>% addProviderTiles("Stamen.Toner") %>%  addCircleMark
 
 
 
+# In addition, you can use Poisson data
+# such as incidence data (cases per person time)
+# As we are working with areal data, we use 
+# centroids for Kulldorf. For Poisson data,
+# we also need the expected numbers of cases
+# assuming there was no variation in risk. These happen
+# to be included in the scotland data, but if these are not
+# available you can calculate manually or 
+# use the 'exepcted' function which
+# calculates the overall incidence rate and applies
+# that to each area's population
+overall_inc <- sum(scotland$COUNT) / sum(scotland$PY)
+expected_cases <- scotland$PY * overall_inc # slightly different from those provided prob due to adjustment for covariates
 
+# or using 'expected'
+expected(scotland$PY, scotland$COUNT,  1)
+
+# Now we can run Kulldorf
+kulldorf_out_pois <- kulldorff(geo = scotland_centroids, 
+                               cases = scotland$COUNT,
+                               population = scotland$PY,
+                               expected.cases = scotland$EXP,
+                               pop.upper.bound=0.1, 
+                               n.simulat=999,
+                               alpha.level=0.05)
+
+# Take a look
+kulldorf_out_pois$most.likely.cluster
+
+# Plot
+cluster_pois <- kulldorf_out_pois$most.likely.cluster$location.IDs.included
+
+
+# Plot
+leaflet() %>% addProviderTiles("Stamen.Toner") %>% 
+  addPolygons(data=scotland, col="gray", weight=2, fillOpacity = 0.6) %>% 
+  addPolygons(data=scotland[cluster_pois,],
+              color = "red")
+  
+  
 
 
