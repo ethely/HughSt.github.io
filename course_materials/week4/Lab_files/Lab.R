@@ -1,14 +1,22 @@
-# # Attach libraries for visualisation
+### Lab 4: Clustering
+
+#Attach libraries for visualisation
 
 library(spatstat)
 library(geosphere)
+library(rgeos)
 library(leaflet)
+install.packages("car")
 library(car)
+install.packages("SpatialEpi")
 library(SpatialEpi)
 library(geoR)
 library(spdep) # Spatial Dependence: Weighting Schemes, Statistics and Models
+install.packages("ape")
 library(ape) # Analyses of Phylogenetics and Evolution
+install.packages("pgirmess")
 library(pgirmess) # Data Analysis in Ecology
+install.packages("smacpod")
 library(smacpod) # Spatial scanning statistic
 
 
@@ -24,12 +32,14 @@ BF_malaria_data$prevalence <- BF_malaria_data$positives / BF_malaria_data$examin
 
 # Remind yourself of what data look like - do you see evidence of spatial clustering?
 pal = colorNumeric("Oranges", BF_malaria_data$prevalence)
-leaflet(BF_malaria_data) %>% addTiles() %>% addCircleMarkers(~longitude, ~latitude, fillOpacity=1,
+leaflet(BF_malaria_data)  %>% addProviderTiles("Stamen.TonerLite") %>% addCircleMarkers(~longitude, ~latitude, fillOpacity=0.7,
                                                              fillColor= ~pal(prevalence), radius=~prevalence*10, stroke=TRUE, weight=1) %>% 
   addLegend(pal = pal, values = ~prevalence)
 
+##HUGH: you switched notation here, started using the ~,so just might want to explain what that is and why it works?
+
 # SAME AS
-leaflet() %>% addTiles() %>% addCircleMarkers(BF_malaria_data$longitude, BF_malaria_data$latitude, fillOpacity =1,
+leaflet() %>% addProviderTiles("Stamen.TonerLite") %>% addCircleMarkers(BF_malaria_data$longitude, BF_malaria_data$latitude, fillOpacity =0.7,
                                               fillColor = pal(BF_malaria_data$prevalence), radius = BF_malaria_data$prevalence*10, weight=1) %>%
   addLegend(pal = pal, values=BF_malaria_data$prevalence)
 
@@ -39,39 +49,53 @@ leaflet() %>% addTiles() %>% addCircleMarkers(BF_malaria_data$longitude, BF_mala
 # Moran's i and correlograms: often used as a formal statistical test if there is presence of spatial
 # autocorrelation across the study area
 # NB can do this with multiple packages
+##HUGH: What is NB?
 ###########################################################################################################
 
 # Approach 1: Calculate moran's I using a distance based matrix
+
+#Create a histogram of prevalence
 hist(BF_malaria_data$prevalence)
 
-# Use the logistic transformation (log odds) to make more normal
+# Use the logistic transformation (log odds) to make distribution more normal
 # and compare to previous variogram results
+# HUGH: If this is the variogram from the last week then should mention that here
 BF_malaria_data$log_odds <- logit(BF_malaria_data$prevalence)
 
 # Generate a distance matrix
 BF.dists <- as.matrix(distm(cbind(BF_malaria_data$longitude, BF_malaria_data$latitude)))
 dim(BF.dists) # 109 x 109 matrix of distance between all sets of points
 
-# Take the inverse of the matrix values so that closer values have a larger weight and vs vs
+# Take the inverse of the matrix values so that closer values have a larger weight and the farther
+# values have a smaller weight
 BF.dists.inv <- 1/BF.dists
-diag(BF.dists.inv) <- 0 # replace the diagonal values with zero
 
-# Computes Moran's I autocorrelation coefficient of x giving a matrix of weights (here based on distance) 
-Moran.I(BF_malaria_data$log_odds, BF.dists.inv)                                                   # "ape" package
+# Replace the diagonal values with zero
+diag(BF.dists.inv) <- 0
+
+# Computes Moran's I autocorrelation coefficient of x given a matrix of weights (here based on distance) 
+# Moran.I function is part of the "ape" package
+Moran.I(BF_malaria_data$log_odds, BF.dists.inv)
+
+# What are the four values that this generates? What do each of them mean?
 
 # Create a correlogram to explore moran's i over different spatial lags
-# "pgirmess" requires spdep (which also has correlogram options) but is much simplier and user-friendly. 
+# "pgirmess" requires spdep (which also has correlogram options) but is much simplier and user-friendly 
+
+#HUGH: Clarify what exactly is a spatial lag
 
 # Calculate the maximum distance between points
+# (pgi.color is part of the "pgirmess" package)
+# (coords = xy cordinates, z= vector of values at each location and nbclass = the number of bins)
 xy=cbind(BF_malaria_data$longitude, BF_malaria_data$latitude)
 pgi.cor <- correlog(coords=BF_malaria_data[,c("longitude", "latitude")], 
                     z=BF_malaria_data$log_odds, 
-                    method="Moran", nbclass=10)               # "pgirmess" package
-# coords = xy cordinates, z= vector of values at each location and nbclass = the number of bins
+                    method="Moran", nbclass=10)
+pgi.cor 
+# (distclass is midpoint for the bin)
 
 # Plot results
 plot(pgi.cor) # statistically significant values (p<0.05) are plotted in red
-pgi.cor # distclass is midpoint for the bin
 
 # Based on the correlogram, over what spatial lags are there evidence for spatial autocorrelation? 
 #    Is this clustering positive or negative?
@@ -86,7 +110,9 @@ par(mfrow=c(2,1))
 plot(Vario)
 plot(pgi.cor)
 
-# Calculate moran's I using a binary distance matrix
+## Calculate moran's I using a binary distance matrix
+
+#Load data
 load("Scotland.RData")
 
 # Remind ourselves what this looks like
@@ -97,11 +123,14 @@ leaflet() %>% addProviderTiles("Stamen.Toner") %>%
             pal = scot_col_pal, values=scotland$SMR, title = "SMR",
             "topleft")
 
+# Create the neighborhood networks
 ngh <- poly2nb(scotland, row.names=scotland$SP_ID)
 ngh[]
 
-# We can plot the neighbourhood network using the 
-# centroids
+#HUGH: what is the poly2nb function?
+
+
+# We can plot the neighbourhood network using the centroids
 scotland_centroids <- coordinates(gCentroid(scotland, byid=T))
 par(mfrow=c(1,1))
 plot(scotland)
@@ -111,11 +140,13 @@ plot(ngh, scotland_centroids, add=T, col="red")
 ngh_weights <-  nb2listw(ngh)
 moran.test(scotland$SMR, listw=ngh_weights)
 
+# What does this Moran's I value mean? How would you interpret these results?
+# HUGH: maybe throw in a sentence here about what their main take away should be, especially from comparing all these different diagrams. This section ends kind of abruptly
 
 ###########################################################################################################
 #  Part II:  Local measures of clustering 
 
-###########################################################################################################
+##########################################################################################################
 
 # Open Namibia malaria case data
 CaseControl<-read.csv("CaseControl.csv")
@@ -131,8 +162,8 @@ CaseControl_SPDF <- SpatialPointsDataFrame(coords = CaseControl[,c("long", "lat"
 case_color_scheme <- colorNumeric(c("blue", "red"), CaseControl_SPDF$case)
 leaflet() %>% addProviderTiles("Stamen.Toner") %>%  
   addCircleMarkers(data=CaseControl_SPDF, 
-  color = case_color_scheme(CaseControl_SPDF$case),
-  weight = 2, radius=5)
+                   color = case_color_scheme(CaseControl_SPDF$case),
+                   weight = 2, radius=5)
 
 
 # As part of the last lecture, you already generated kernel density estimates and 
@@ -146,7 +177,9 @@ leaflet() %>% addProviderTiles("Stamen.Toner") %>%
 CaseControlPPP <- ppp(CaseControl$long, CaseControl$lat, range(CaseControl$long), range(CaseControl$lat), marks = as.factor(CaseControl$case))
 
 # Run Kulldorf's scan statistic
-out <- spscan.test(CaseControlPPP, nsim = 999, case = 2, alpha = 0.05)           # "smacpod" library
+
+# This function is part of "smacpod" package
+out <- spscan.test(CaseControlPPP, nsim = 999, case = 2, alpha = 0.05)
 out
 
 # Map results
@@ -157,7 +190,7 @@ leaflet() %>% addProviderTiles("Stamen.Toner") %>%
                    stroke = FALSE, radius=2, fillOpacity=1) %>% 
   addCircles(lng = out$clusters[[1]]$coords[,1], lat = out$clusters[[1]]$coords[,2], weight = 2,
              radius = out$clusters[[1]]$r*112*1000, color="grey") # Have to multiply by 112 to convert from dd to km and 1000 to m
-
+# HUGH: may want to mention what is going on with each of these parameters, like all of the notation for how you create the radius
 
 # You can also use Kulldorf's scan statistic
 # for prevalence data, using the kulldorf function
@@ -176,16 +209,23 @@ kulldorf_out$most.likely.cluster
 # Plot
 cluster <- kulldorf_out$most.likely.cluster$location.IDs.included
 
-cluster_colors <- rep("blue",nrow(BF_malaria_data) )
+#HUGH: Why did you use double $ signs here? What is happening in line 206?
+
+cluster_colors <- rep("blue",nrow(BF_malaria_data))
 cluster_colors[cluster] <- "red"
 
-leaflet(BF_malaria_data) %>% addProviderTiles("Stamen.Toner") %>%  addCircleMarkers(~longitude, ~latitude, 
-                                                             color = cluster_colors, radius=5, stroke=TRUE, weight=1) 
+
+leaflet(BF_malaria_data) %>% addProviderTiles("Stamen.TonerLite") %>%  
+  addCircleMarkers(~longitude, ~latitude, 
+    color = cluster_colors, radius=5, stroke=TRUE, weight=1) %>%
+  addLegend(colors = c("red", "blue"), labels = c("Hotspot", "Not hotspot"))
+
 
 
 
 # In addition, you can use Poisson data
 # such as incidence data (cases per person time)
+
 # As we are working with areal data, we use 
 # centroids for Kulldorf. For Poisson data,
 # we also need the expected numbers of cases
@@ -222,7 +262,7 @@ leaflet() %>% addProviderTiles("Stamen.Toner") %>%
   addPolygons(data=scotland, col="gray", weight=2, fillOpacity = 0.6) %>% 
   addPolygons(data=scotland[cluster_pois,],
               color = "red")
-  
-  
+
+
 
 
