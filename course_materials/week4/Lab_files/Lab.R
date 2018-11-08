@@ -24,12 +24,12 @@ BF_malaria_data$prevalence <- BF_malaria_data$positives / BF_malaria_data$examin
 
 # Remind yourself of what data look like - do you see evidence of spatial clustering?
 pal = colorNumeric("Oranges", BF_malaria_data$prevalence)
-leaflet(BF_malaria_data) %>% addTiles() %>% addCircleMarkers(~longitude, ~latitude, fillOpacity=1,
+leaflet(BF_malaria_data)  %>% addProviderTiles("Stamen.TonerLite") %>% addCircleMarkers(~longitude, ~latitude, fillOpacity=0.7,
                                                              fillColor= ~pal(prevalence), radius=~prevalence*10, stroke=TRUE, weight=1) %>% 
   addLegend(pal = pal, values = ~prevalence)
 
 # SAME AS
-leaflet() %>% addTiles() %>% addCircleMarkers(BF_malaria_data$longitude, BF_malaria_data$latitude, fillOpacity =1,
+leaflet() %>% addProviderTiles("Stamen.TonerLite") %>% addCircleMarkers(BF_malaria_data$longitude, BF_malaria_data$latitude, fillOpacity =0.7,
                                               fillColor = pal(BF_malaria_data$prevalence), radius = BF_malaria_data$prevalence*10, weight=1) %>%
   addLegend(pal = pal, values=BF_malaria_data$prevalence)
 
@@ -146,7 +146,7 @@ leaflet() %>% addProviderTiles("Stamen.Toner") %>%
 CaseControlPPP <- ppp(CaseControl$long, CaseControl$lat, range(CaseControl$long), range(CaseControl$lat), marks = as.factor(CaseControl$case))
 
 # Run Kulldorf's scan statistic
-out <- spscan.test(CaseControlPPP, nsim = 999, case = 2, alpha = 0.05)           # "smacpod" library
+out <- spscan.test(CaseControlPPP, nsim = 999, case = 2, alpha = 0.05)    # "smacpod" library
 out
 
 # Map results
@@ -179,8 +179,10 @@ cluster <- kulldorf_out$most.likely.cluster$location.IDs.included
 cluster_colors <- rep("blue",nrow(BF_malaria_data) )
 cluster_colors[cluster] <- "red"
 
-leaflet(BF_malaria_data) %>% addProviderTiles("Stamen.Toner") %>%  addCircleMarkers(~longitude, ~latitude, 
-                                                             color = cluster_colors, radius=5, stroke=TRUE, weight=1) 
+leaflet(BF_malaria_data) %>% addProviderTiles("Stamen.TonerLite") %>%  
+  addCircleMarkers(~longitude, ~latitude, 
+    color = cluster_colors, radius=5, stroke=TRUE, weight=1) %>%
+  addLegend(colors = c("red", "blue"), labels = c("Hotspot", "Not hotspot"))
 
 
 
