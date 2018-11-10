@@ -18,6 +18,7 @@ library(lme4)
 library(leaflet)
 library(oro.nifti)
 
+source("assignment 3.R")
 
 # Open Namibia malaria case data
 setwd("...")
@@ -103,11 +104,11 @@ plot(rel_risk_est)
 risk_raster <- raster(risk_est, crs = crs(NAM_Adm0))
 
 # Then define a color palette
-pal = colorNumeric(palette=tim.colors(64), domain=exp(values(risk_raster)), na.color = NA)
+pal = colorNumeric(palette=tim.colors(64), domain=values(risk_raster), na.color = NA)
 
 #Then plot with leaflet
 leaflet() %>% addTiles("http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png") %>% 
-  addRasterImage(exp(risk_raster), opacity=0.6, col = pal)
+  addRasterImage(risk_raster, opacity=0.6, col = pal)
 
 
 ## Interpolation of point (prevalence etc.) data
